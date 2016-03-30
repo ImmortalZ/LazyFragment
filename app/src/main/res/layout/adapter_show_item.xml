@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="5dp"
+    android:orientation="vertical">
+    <ImageView
+        android:background="@drawable/lxh_jiujie"
+        android:id="@+id/iv_adapter"
+        android:layout_width="80dp"
+        android:layout_height="80dp" />
+    <TextView
+        android:text="11"
+        android:id="@+id/tv_adapter"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>
