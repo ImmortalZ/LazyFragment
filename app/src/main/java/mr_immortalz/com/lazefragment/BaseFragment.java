@@ -17,9 +17,10 @@ public abstract class BaseFragment extends Fragment {
     private boolean isVisible = false;//当前Fragment是否可见
     private boolean isInitView = false;//是否与View建立起映射关系
     private boolean isFirstLoad = true;//是否是第一次加载数据
-
     private View convertView;
     private SparseArray<View> mViews;
+    private boolean isVisibleToUser;
+    private boolean isReflashData;
 
     @Nullable
     @Override
@@ -46,8 +47,10 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+        this.isVisibleToUser = isVisibleToUser;
         LogUtil.m("isVisibleToUser " + isVisibleToUser + "   " + this.getClass().getSimpleName());
         if (isVisibleToUser) {
             isVisible = true;
@@ -59,24 +62,46 @@ public abstract class BaseFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isVisibleToUser && isReflashData) {
+            lazyLoadData();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        isReflashData = true;
+    }
+
     private void lazyLoadData() {
         if (isFirstLoad) {
+//            new AlertDialog.Builder(getContext()).setTitle("123").create().show();
+
             LogUtil.m("第一次加载 " + " isInitView  " + isInitView + "  isVisible  " + isVisible + "   " + this.getClass().getSimpleName());
         } else {
             LogUtil.m("不是第一次加载" + " isInitView  " + isInitView + "  isVisible  " + isVisible + "   " + this.getClass().getSimpleName());
         }
-        if (!isFirstLoad || !isVisible || !isInitView) {
-            LogUtil.m("不加载" + "   " + this.getClass().getSimpleName());
+//        if (!isFirstLoad || !isVisible || !isInitView) {
+//            LogUtil.m("不加载" + "   " + this.getClass().getSimpleName());
+//            return;
+//        }
+        if (!isVisible || !isInitView) {
             return;
         }
-
-        LogUtil.m("完成数据第一次加载"+ "   " + this.getClass().getSimpleName());
+        if (isFirstLoad&&isInitView) {
+            initFirstData();
+        }
+        LogUtil.m("完成数据第一次加载" + "   " + this.getClass().getSimpleName());
         initData();
         isFirstLoad = false;
     }
 
     /**
      * 加载页面布局文件
+     *
      * @return
      */
     protected abstract int getLayoutId();
@@ -90,9 +115,13 @@ public abstract class BaseFragment extends Fragment {
      * 加载要显示的数据
      */
     protected abstract void initData();
-
+    /**
+     *只会在fragment的oncreateview 加载第一次的数据
+     */
+    protected abstract void initFirstData();
     /**
      * fragment中可以通过这个方法直接找到需要的view，而不需要进行类型强转
+     *
      * @param viewId
      * @param <E>
      * @return

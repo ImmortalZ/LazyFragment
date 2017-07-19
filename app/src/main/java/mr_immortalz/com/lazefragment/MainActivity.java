@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         //将viewpager与indicator绑定
         indicator.setDatas(mDatas);
         indicator.setViewPager(viewPager);
+
     }
 
 

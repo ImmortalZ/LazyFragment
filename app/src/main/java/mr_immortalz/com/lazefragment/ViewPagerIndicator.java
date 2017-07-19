@@ -7,6 +7,7 @@ import android.graphics.RectF;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -153,16 +154,23 @@ public class ViewPagerIndicator extends LinearLayout {
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                     //LogUtil.m();
                     //当移动的是最左边item
+                    Log.d("ViewPagerIndicator", "positionOffset:" + positionOffset+"rebounceOffset:"+rebounceOffset);
                     if (isAutoSelect && currentPosition == 0) {
                         //滑动手松开时，让最左边（即第一个）item滑动到左边缘位置
                         if (positionOffset > rebounceOffset / 2) {
                             mLeft = (position + (positionOffset - rebounceOffset / 2) * 2) * mWidth;
+                            Log.d("isAutoSelect", "mLeft:" + mLeft);
+                            Log.d("ViewPagerIndicator", "0");
                         } else if (positionOffset > rebounceOffset / 3 && positionOffset < rebounceOffset / 2) {
                             //让最左边（即第一个）item 向右回弹一部分距离
                             mLeft = (position + (rebounceOffset / 2) - positionOffset) * mWidth * 6 / 12;
+                            Log.d("isAutoSelect", "mLeft:" + mLeft+"positionOffset"+positionOffset);
+                            Log.d("ViewPagerIndicator", "1");
                         } else {
                             //让最左边（即最后一个）item 向左回弹到边缘位置
                             mLeft = (position + positionOffset) * mWidth * 6 / 12;
+                            Log.d("isAutoSelect", "mLeft:" + mLeft);
+                            Log.d("ViewPagerIndicator", "2");
                         }
                         invalidate();
                     } else if (isAutoSelect && currentPosition == itemCount - 1) {
@@ -208,6 +216,7 @@ public class ViewPagerIndicator extends LinearLayout {
                         //当移动的是中间item
                         scrollTo(position, positionOffset);
                         rebounceOffset = positionOffset;
+                        Log.d("ViewPagerIndicator", "mLeft:" + mLeft);
                     }
                     setTitleColor();
                 }
